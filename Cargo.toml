@@ -1,0 +1,21 @@
+[package]
+name = "endo"
+version = "0.1.0"
+authors = ["Alexander Korolev <kilork@yandex.ru>"]
+readme = "README.md"
+license = "Unlicense OR MIT"
+description = """
+A Rust library implementing DNA to RNA encoding from
+ICFP 2007 Programming Contest.
+"""
+
+[dependencies]
+log = "0.4"
+simplelog = "0.5"
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "dna"
+harness = false
