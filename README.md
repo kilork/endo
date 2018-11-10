@@ -12,10 +12,10 @@ To check it works properly one can run example **dnarna**.
 
 Run with self check prefix from the Endo book.
 
-    cargo run --example dnarna -- IIPIFFCPICICIICPIICIPPPICIIC
+    cargo run --release --example dnarna -- IIPIFFCPICICIICPIICIPPPICIIC
 
 Run with empty prefix
 
-    cargo run --example dnarna
+    cargo run --release --example dnarna
 
 
