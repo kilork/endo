@@ -476,10 +476,10 @@ mod tests {
                 assert_eq!(dna_rope_prefix.len(), prefix.len());
             }
 
-            let dna_rope_prefix: Vec<_> = dna_rope_prefix.iter().collect();
+            let dna_rope_prefix = dna_rope_prefix.as_vec();
             assert_eq!(dna_rope_prefix, prefix);
 
-            let dna_rope_suffix: Vec<_> = dna_rope_suffix.iter().collect();
+            let dna_rope_suffix = dna_rope_suffix.as_vec();
             assert_eq!(dna_rope_suffix, suffix);
         }
     }

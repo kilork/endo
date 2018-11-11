@@ -17,5 +17,3 @@ Run with self check prefix from the Endo book.
 Run with empty prefix
 
     cargo run --release --example dnarna
-
-
