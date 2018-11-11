@@ -58,14 +58,6 @@ impl DnaRope {
         }
     }
 
-    pub fn get(&self, index: usize) -> Option<&DNA> {
-        if let Some((vec, index)) = self.index_pair(index) {
-            self.dna[vec].get(index)
-        } else {
-            None
-        }
-    }
-
     pub fn get_range(&self, range: Range<usize>) -> Vec<&DNA> {
         self.iter()
             .skip(range.start)
@@ -132,10 +124,6 @@ impl DnaRope {
         }
     }
 
-    pub fn split_off_by_iter(&mut self, at: &Iter) -> Self {
-        self.split_off(at.pos())
-    }
-
     fn index_pair(&self, i: usize) -> Option<(usize, usize)> {
         let index = &self.index;
         match index.iter().collect::<Vec<&usize>>().binary_search(&&i) {
@@ -159,8 +147,7 @@ impl DnaRope {
         for range in ranges {
             let have_intersection = result
                 .iter()
-                .find(|x| !((range.1.start >= x.2.end) || (range.1.end <= x.2.start)))
-                .is_some();
+                .any(|x| !((range.1.start >= x.2.end) || (range.1.end <= x.2.start)));
             result.push((
                 range.0,
                 if have_intersection {
@@ -385,7 +372,7 @@ mod tests {
         assert_eq!(iter.next(), Some(&P));
         assert_eq!(iter.next(), None);
 
-        let as_vec: Vec<&DNA> = dna_rope.iter().collect();
+        let as_vec: Vec<&DNA> = dna_rope.as_vec();
         assert_eq!(
             as_vec,
             vec![&I, &C, &F, &P, &I, &C, &F, &P, &I, &I, &I, &P, &P, &F, &P, &P, &P, &P]
@@ -505,7 +492,7 @@ mod tests {
         let result = dna_rope.split_by_ranges(ranges);
         for (index, range) in ranges.iter().enumerate() {
             let expected = &arr[range.clone()];
-            let actual: Vec<_> = result[index].iter().collect();
+            let actual: Vec<_> = result[index].as_vec();
             assert_eq!(actual, expected);
         }
     }

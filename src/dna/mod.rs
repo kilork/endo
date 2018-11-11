@@ -205,7 +205,7 @@ mod tests {
         let mut dna_executor = DnaExecutor::from(source);
         dna_executor.execute_loops(1);
         let dna = dna_executor.dna.unwrap_or_else(|| DnaRope::from(vec![]));
-        let dna_remainig = dna.iter().collect::<Vec<_>>();
+        let dna_remainig = dna.as_vec();
         assert_eq!(
             dna_remainig,
             &read_dna(result).iter().collect::<Vec<_>>()[..]

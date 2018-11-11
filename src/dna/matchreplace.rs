@@ -1,7 +1,7 @@
 use super::{
-    pattern::{self, Pattern},
+    pattern::Pattern,
     template::Template,
-    DnaRope, DnaRopeIter,
+    DnaRope,
     DNA::{self, *},
 };
 
