@@ -15,7 +15,11 @@ simplelog = "0.5"
 
 [dev-dependencies]
 criterion = "0.2"
+cpuprofiler = "0.0.3"
 
 [[bench]]
 name = "dna"
 harness = false
+
+[profile.release]
+debug = true

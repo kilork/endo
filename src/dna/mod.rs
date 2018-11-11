@@ -71,7 +71,6 @@ impl DnaExecutor {
         while let Some(dna) = self.dna.take() {
             let finished = self.execute_single(dna);
             loops_done += 1;
-            self.loops_count += 1;
             if finished {
                 return true;
             }
@@ -100,7 +99,9 @@ impl DnaExecutor {
     }
 
     fn execute_single(&mut self, mut dna: DnaRope) -> bool {
+        self.loops_count += 1;
         if self.loops_count % 10000 == 0 {
+            debug!("running defragment");
             dna = dna.defragment();
         }
         debug!(
