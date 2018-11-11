@@ -86,7 +86,7 @@ impl DnaExecutor {
     }
 
     fn add_dna_to_rna(&mut self, gen_count: usize, iter: &mut DnaRopeIter) {
-        let mut rna: Vec<DNA> = vec![];
+        let mut rna: Vec<DNA> = Vec::with_capacity(gen_count);
         for _ in 0..gen_count {
             if let Some(gene) = iter.next() {
                 rna.push(gene.clone());
