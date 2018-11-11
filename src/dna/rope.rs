@@ -1,13 +1,12 @@
 use super::DNA;
-use std::collections::VecDeque;
 
 use std::cmp::Ordering;
 use std::ops::Range;
 
 #[derive(Clone)]
 pub struct DnaRope {
-    dna: VecDeque<Vec<DNA>>,
-    index: VecDeque<usize>,
+    dna: Vec<Vec<DNA>>,
+    index: Vec<usize>,
 }
 
 impl From<Vec<DNA>> for DnaRope {
@@ -19,43 +18,41 @@ impl From<Vec<DNA>> for DnaRope {
 impl DnaRope {
     pub fn new() -> Self {
         Self {
-            dna: VecDeque::new(),
-            index: VecDeque::new(),
+            dna: Vec::new(),
+            index: Vec::new(),
         }
     }
 
-    pub fn from_raw(dna: VecDeque<Vec<DNA>>) -> Self {
+    pub fn from_raw(dna: Vec<Vec<DNA>>) -> Self {
         let index = Self::create_index(&dna);
         Self { dna, index }
     }
 
-    fn create_index(dna: &VecDeque<Vec<DNA>>) -> VecDeque<usize> {
-        let mut index = VecDeque::with_capacity(dna.len());
+    fn create_index(dna: &Vec<Vec<DNA>>) -> Vec<usize> {
+        let mut index = Vec::with_capacity(dna.len());
         let mut count = 0;
         for subdna in dna {
             count += subdna.len();
-            index.push_back(count);
+            index.push(count);
         }
         index
     }
 
     pub fn prepend(&mut self, mut prefix: DnaRope) {
-        while let Some(subdna) = prefix.dna.pop_back() {
-            self.dna.push_front(subdna);
+        while let Some(subdna) = prefix.dna.pop() {
+            self.dna.insert(0, subdna);
         }
         self.index = Self::create_index(&self.dna);
     }
 
     pub fn append_dna(&mut self, subdna: Vec<DNA>) {
         let count = self.len() + subdna.len();
-        self.dna.push_back(subdna);
-        self.index.push_back(count);
+        self.dna.push(subdna);
+        self.index.push(count);
     }
 
     pub fn append(&mut self, mut suffix: DnaRope) {
-        while let Some(subdna) = suffix.dna.pop_front() {
-            self.append_dna(subdna);
-        }
+        suffix.dna.drain(..).into_iter().for_each(|x| self.append_dna(x));
     }
 
     pub fn get_range(&self, range: Range<usize>) -> Vec<&DNA> {
@@ -70,7 +67,7 @@ impl DnaRope {
     }
 
     pub fn len(&self) -> usize {
-        *self.index.back().unwrap_or(&0)
+        *self.index.last().unwrap_or(&0)
     }
 
     pub fn rope_count(&self) -> usize {
@@ -112,10 +109,10 @@ impl DnaRope {
                 let vec_postfix = postfix[0].split_off(at);
                 let vec_suffix = std::mem::replace(&mut postfix[0], vec_postfix);
                 let vec_suffix_len = vec_suffix.len();
-                self.dna.push_back(vec_suffix);
+                self.dna.push(vec_suffix);
 
                 let last_index = self.len() + vec_suffix_len;
-                self.index.push_back(last_index);
+                self.index.push(last_index);
             }
 
             Self::from_raw(postfix)
