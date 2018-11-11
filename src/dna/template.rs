@@ -2,8 +2,8 @@ use super::{
     nat, DnaExecutor, DnaRopeIter,
     DNA::{self, *},
 };
+use rna::RNA;
 use std::fmt;
-use ::rna::RNA;
 
 #[derive(Debug, PartialEq)]
 pub enum Template {
