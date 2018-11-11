@@ -5,10 +5,10 @@ mod template;
 
 use std::fmt;
 
-use self::rope::{DnaRope, Iter as DnaRopeIter};
-use super::rna::RNA;
+pub use self::rope::{DnaRope, Iter as DnaRopeIter};
+use ::rna::RNA;
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum DNA {
     I,
     C,
@@ -85,17 +85,8 @@ impl DnaExecutor {
         &self.rna[..]
     }
 
-    fn add_dna_to_rna(&mut self, gen_count: usize, iter: &mut DnaRopeIter) {
-        let mut rna: Vec<DNA> = Vec::with_capacity(gen_count);
-        for _ in 0..gen_count {
-            if let Some(gene) = iter.next() {
-                rna.push(gene.clone());
-            } else {
-                break;
-            }
-        }
-
-        self.rna.push(RNA::from(rna));
+    fn add_rna(&mut self, rna: RNA) {
+        self.rna.push(rna);
     }
 
     fn execute_single(&mut self, mut dna: DnaRope) -> bool {

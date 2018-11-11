@@ -230,10 +230,18 @@ impl<'a, 'b: 'a> Iter<'a> {
             return None;
         }
 
-        let mut dfa = vec![[0; 4]; key.len()];
+        let key_len = key.len();
+        if key_len == 1 {
+            let key = key[0];
+            let mut iter = self.clone();
+            let pos = iter.pos();
+            return iter.position(|&x| x == key).map(|x| pos + x);
+        }
+
+        let mut dfa = vec![[0; 4]; key_len];
         dfa[0][key[0].clone() as usize] = 1;
         let mut x = 0;
-        for j in 1..key.len() {
+        for j in 1..key_len {
             dfa[j] = dfa[x];
             let k = key[j].clone() as usize;
             dfa[j][k] = j + 1;
@@ -244,8 +252,8 @@ impl<'a, 'b: 'a> Iter<'a> {
         let mut j = 0;
         while let Some(dna) = iter.next() {
             j = dfa[j][dna.clone() as usize];
-            if j == key.len() {
-                return Some(iter.pos() - key.len());
+            if j == key_len {
+                return Some(iter.pos() - key_len);
             }
         }
         None

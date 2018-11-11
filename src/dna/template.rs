@@ -3,6 +3,7 @@ use super::{
     DNA::{self, *},
 };
 use std::fmt;
+use ::rna::RNA;
 
 #[derive(Debug, PartialEq)]
 pub enum Template {
@@ -65,7 +66,7 @@ pub fn execute(executor: &mut DnaExecutor, iter: &mut DnaRopeIter) -> Option<Vec
                         }
                     }
                     Some(I) => {
-                        executor.add_dna_to_rna(7, iter);
+                        executor.add_rna(RNA::from_dna_iter(iter));
                     }
                     _ => return None,
                 },

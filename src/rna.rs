@@ -35,34 +35,57 @@ pub enum RNA {
 
 use super::{HEIGHT, WIDTH};
 
-use super::dna::DNA::{self, *};
+use super::dna::{
+    DnaRopeIter,
+    DNA::{self, *},
+};
 
 use self::{Dir::*, RnaAlpha::*, RnaColor::*, RNA::*};
 
-impl From<Vec<DNA>> for RNA {
-    fn from(value: Vec<DNA>) -> Self {
-        match &value[..] {
-            [P, I, P, I, I, I, C] => AddColor(Black),
-            [P, I, P, I, I, I, P] => AddColor(Red),
-            [P, I, P, I, I, C, C] => AddColor(Green),
-            [P, I, P, I, I, C, F] => AddColor(Yellow),
-            [P, I, P, I, I, C, P] => AddColor(Blue),
-            [P, I, P, I, I, F, C] => AddColor(Magenta),
-            [P, I, P, I, I, F, F] => AddColor(Cyan),
-            [P, I, P, I, I, P, C] => AddColor(White),
-            [P, I, P, I, I, P, F] => AddAlpha(Transparent),
-            [P, I, P, I, I, P, P] => AddAlpha(Opaque),
-            [P, I, I, P, I, C, P] => EmptyBucket,
-            [P, I, I, I, I, I, P] => Move,
-            [P, C, C, C, C, C, P] => TurnCounterClockwise,
-            [P, F, F, F, F, F, P] => TurnClockwise,
-            [P, C, C, I, F, F, P] => Mark,
-            [P, F, F, I, C, C, P] => Line,
-            [P, I, I, P, I, I, P] => TryFill,
-            [P, C, C, P, F, F, P] => AddBitmap,
-            [P, F, F, P, C, C, P] => Compose,
-            [P, F, F, I, C, C, F] => Clip,
-            _ => Unknown(value),
+impl RNA {
+    pub fn from_dna_iter(iter: &mut DnaRopeIter) -> Self {
+        if let (Some(a1), Some(a2), Some(a3), Some(a4), Some(a5), Some(a6), Some(a7)) = (
+            iter.next(),
+            iter.next(),
+            iter.next(),
+            iter.next(),
+            iter.next(),
+            iter.next(),
+            iter.next(),
+        ) {
+            match (a1, a2, a3, a4, a5, a6, a7) {
+                (P, I, P, I, I, I, C) => AddColor(Black),
+                (P, I, P, I, I, I, P) => AddColor(Red),
+                (P, I, P, I, I, C, C) => AddColor(Green),
+                (P, I, P, I, I, C, F) => AddColor(Yellow),
+                (P, I, P, I, I, C, P) => AddColor(Blue),
+                (P, I, P, I, I, F, C) => AddColor(Magenta),
+                (P, I, P, I, I, F, F) => AddColor(Cyan),
+                (P, I, P, I, I, P, C) => AddColor(White),
+                (P, I, P, I, I, P, F) => AddAlpha(Transparent),
+                (P, I, P, I, I, P, P) => AddAlpha(Opaque),
+                (P, I, I, P, I, C, P) => EmptyBucket,
+                (P, I, I, I, I, I, P) => Move,
+                (P, C, C, C, C, C, P) => TurnCounterClockwise,
+                (P, F, F, F, F, F, P) => TurnClockwise,
+                (P, C, C, I, F, F, P) => Mark,
+                (P, F, F, I, C, C, P) => Line,
+                (P, I, I, P, I, I, P) => TryFill,
+                (P, C, C, P, F, F, P) => AddBitmap,
+                (P, F, F, P, C, C, P) => Compose,
+                (P, F, F, I, C, C, F) => Clip,
+                _ => Unknown(vec![
+                    a1.clone(),
+                    a2.clone(),
+                    a3.clone(),
+                    a4.clone(),
+                    a5.clone(),
+                    a6.clone(),
+                    a7.clone(),
+                ]),
+            }
+        } else {
+            Unknown(vec![])
         }
     }
 }
