@@ -52,14 +52,15 @@ impl DnaRope {
     }
 
     pub fn append(&mut self, mut suffix: DnaRope) {
-        suffix.dna.drain(..).into_iter().for_each(|x| self.append_dna(x));
+        suffix
+            .dna
+            .drain(..)
+            .into_iter()
+            .for_each(|x| self.append_dna(x));
     }
 
     pub fn get_range(&self, range: Range<usize>) -> Vec<&DNA> {
-        self.iter()
-            .skip(range.start)
-            .take(range.end - range.start)
-            .collect::<Vec<_>>()
+        self.iter_from_range(range).collect()
     }
 
     pub fn as_vec(&self) -> Vec<&DNA> {
@@ -75,7 +76,7 @@ impl DnaRope {
     }
 
     pub fn defragment(self) -> DnaRope {
-        let dna: Vec<DNA> = self.iter().map(DNA::clone).collect();
+        let dna: Vec<DNA> = self.iter().cloned().collect();
         DnaRope::from(dna)
     }
 
@@ -176,40 +177,20 @@ impl DnaRope {
     }
 
     fn copy_from_range(&self, range: Range<usize>) -> Vec<DNA> {
-        self.iter_from_range(range).map(DNA::clone).collect()
+        self.iter_from_range(range).cloned().collect()
     }
 
-    fn iter_from_range(&self, range: Range<usize>) -> RangeIter {
+    fn iter_from_range(&self, range: Range<usize>) -> std::iter::Take<Iter> {
         if let Some((vec, index)) = self.index_pair(range.start) {
-            RangeIter {
-                iter: Iter {
-                    rope: &self,
-                    vec,
-                    index,
-                    absolute_index: range.start,
-                },
-                remaining: range.end - range.start,
-            }
+            Iter {
+                rope: &self,
+                vec,
+                index,
+                absolute_index: range.start,
+            }.take(range.end - range.start)
         } else {
             panic!("Wrong range: {:?}", range);
         }
-    }
-}
-
-struct RangeIter<'a> {
-    iter: Iter<'a>,
-    remaining: usize,
-}
-
-impl<'a> Iterator for RangeIter<'a> {
-    type Item = &'a DNA;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.remaining == 0 {
-            return None;
-        }
-        self.remaining -= 1;
-        self.iter.next()
     }
 }
 
@@ -231,7 +212,7 @@ impl<'a, 'b: 'a> Iter<'a> {
         if key_len == 1 {
             let key = key[0];
             let mut iter = self.clone();
-            let pos = iter.pos();
+            let pos = self.pos();
             return iter.position(|&x| x == key).map(|x| pos + x);
         }
 
@@ -517,7 +498,7 @@ mod tests {
             dna_rope.prepend(e);
         }
         let expected = vec![I, C, F, P, F, F, F, F, I, C, F, P, C, C, C, C];
-        let actual: Vec<_> = dna_rope.iter().map(DNA::clone).collect();
+        let actual: Vec<_> = dna_rope.iter().cloned().collect();
         assert_eq!(actual, expected);
     }
 

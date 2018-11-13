@@ -93,10 +93,7 @@ fn execute_replace(
                             }
                             prefix.append(env_n);
                         } else {
-                            r.extend(protect(
-                                *l,
-                                &env_n.iter().map(DNA::clone).collect::<Vec<_>>()[..],
-                            ));
+                            r.extend(protect(*l, &env_n.iter().cloned().collect::<Vec<_>>()[..]));
                         }
                     }
                 }

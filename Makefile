@@ -15,6 +15,7 @@ lint:
 	cargo clippy
 
 profile: target/release/examples/performance_selfcheck
+	cp callgrind.annotate callgrind.annotate.`date '+%Y%m%d%H%M%S'`
 	cargo build --release --example performance_selfcheck
 	valgrind --callgrind-out-file=callgrind.profile --tool=callgrind  $< >/dev/null
 	callgrind_annotate --auto=yes --inclusive=yes --tree=caller callgrind.profile > callgrind.annotate
