@@ -102,6 +102,13 @@ impl DnaRope {
     }
 
     pub fn split_off(&mut self, at: usize) -> Self {
+        if at == 0 {
+            return Self {
+                dna: std::mem::replace(&mut self.dna, vec![]),
+                index: std::mem::replace(&mut self.index, vec![])
+            };
+        }
+
         if let Some((vec, at)) = self.index_pair(at) {
             let mut postfix = self.dna.split_off(vec);
             self.index.split_off(vec);
@@ -135,17 +142,36 @@ impl DnaRope {
     }
 
     pub fn split_by_ranges(mut self, ranges: &[Range<usize>]) -> Vec<DnaRope> {
+        if ranges.len() == 1 {
+            let range = &ranges[0];
+            if range.end < self.len() {
+                self.split_off(range.end);
+            }
+            return vec![if range.start > 0 {
+                self.split_off(range.start)
+            } else {
+                self
+            }];
+        }
         let mut ranges: Vec<(usize, &Range<usize>)> = ranges.iter().enumerate().collect();
         ranges.sort_unstable_by(|a, b| match a.1.start.cmp(&b.1.start) {
             Ordering::Equal => b.1.end.cmp(&a.1.end),
             x => x,
         });
 
-        let mut result: Vec<(usize, Option<Vec<DNA>>, &Range<usize>)> = vec![];
+        let mut result: Vec<(usize, Option<Vec<DNA>>, &Range<usize>)> =
+            Vec::with_capacity(ranges.len());
         for range in ranges {
             let have_intersection = result
                 .iter()
                 .any(|x| !((range.1.start >= x.2.end) || (range.1.end <= x.2.start)));
+            debug!(
+                "range[{}] {} {:?}({})",
+                range.0,
+                have_intersection,
+                range.1,
+                range.1.end - range.1.start
+            );
             result.push((
                 range.0,
                 if have_intersection {
@@ -157,7 +183,7 @@ impl DnaRope {
             ));
         }
 
-        let mut dna_ropes = vec![];
+        let mut dna_ropes = Vec::with_capacity(result.len());
         while let Some(mut range) = result.pop() {
             dna_ropes.push((
                 range.0,

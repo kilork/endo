@@ -19,7 +19,7 @@ impl fmt::Display for Template {
             "{}",
             match self {
                 Template::Base(dna) => dna.to_string(),
-                Template::NumberLevel(n, l) => format!("({},{})", n, l),
+                Template::NumberLevel(n, l) => if l == &0 { format!("({})", n) } else { format!("({},{})", n, l) },
                 Template::Length(n) => format!("|{}|", n),
             }
         )
