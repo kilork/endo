@@ -124,7 +124,7 @@ fn protect(lvl: usize, gene: &[DNA]) -> Vec<DNA> {
 }
 
 fn quote(gene: Vec<DNA>) -> Vec<DNA> {
-    let mut res = vec![];
+    let mut res = Vec::with_capacity(gene.len());
     for c in gene {
         match c {
             I => res.push(C),
@@ -149,43 +149,3 @@ fn asnat(n: usize) -> Vec<DNA> {
     res.push(P);
     res
 }
-
-/*
-
-const EMPTY_DNA: &[DNA] = &[];
-
-fn replace_dna_from_environment(
-    dna_executor: &mut DnaExecutor,
-    template: &[Template],
-    env: &[Range<usize>],
-    i: usize,
-) {
-    /*
-    let mut r = vec![];
-    for t in template {
-        match t {
-            Template::Base(gene) => r.push(gene.clone()),
-            Template::NumberLevel(n, l) => {
-                let env_n = env
-                    .get(*n)
-                    .map(|x| &dna_executor.dna[x.start..x.end])
-                    .unwrap_or(EMPTY_DNA);
-                if *l == 0 {
-                    r.extend_from_slice(env_n);
-                } else {
-                    r.extend(protect(*l, env_n));
-                }
-            }
-            Template::Length(n) => {
-                r.extend(asnat(env.get(*n).map(|x| x.len()).unwrap_or(0)));
-            }
-        }
-    }
-    dna_executor.dna.drain(0..i);
-    r.extend_from_slice(&dna_executor.dna);
-    dna_executor.dna = r;
-    */
-    unimplemented!();
-}
-
-*/

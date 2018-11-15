@@ -14,19 +14,24 @@ fmt:
 lint:
 	cargo clippy
 
-target/release/examples/performance_dnarna:
-	cargo build --release --example performance_dnarna
-
-profile: target/release/examples/performance_selfcheck
+profile_selfcheck:
 	cp callgrind.annotate callgrind.annotate.`date '+%Y%m%d%H%M%S'`
 	cargo build --release --example performance_selfcheck
 	valgrind --callgrind-out-file=callgrind.profile --tool=callgrind  $< >/dev/null
 	callgrind_annotate --auto=yes --inclusive=yes --tree=caller callgrind.profile > callgrind.annotate
 	less callgrind.annotate
 
-profile_heavy: target/release/examples/performance_dnarna
+profile_empty_prefix:
 	cargo build --release --example performance_dnarna
 	cp callgrind.annotate callgrind.annotate.`date '+%Y%m%d%H%M%S'`
 	valgrind --callgrind-out-file=callgrind.profile --tool=callgrind  $<
-	callgrind_annotate --auto=yes --inclusive=yes --tree=caller callgrind.profile > callgrind.annotate
+	callgrind_annotate --auto=yes --inclusive=yes --tree=both callgrind.profile > callgrind.annotate
 	less callgrind.annotate
+
+gperf_empty_prefix:
+	cargo build --release --features=with_cpuprofiler --example performance_dnarna
+	target/release/examples/performance_dnarna
+	pprof target/release/examples/performance_dnarna performance_dnarna.profile
+
+clean_profile_tmp:
+	rm callgrind.* performance_*.profile

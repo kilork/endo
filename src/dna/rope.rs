@@ -39,9 +39,7 @@ impl DnaRope {
     }
 
     pub fn prepend(&mut self, mut prefix: DnaRope) {
-        while let Some(subdna) = prefix.dna.pop() {
-            self.dna.insert(0, subdna);
-        }
+        prefix.dna.drain(..).rev().for_each(|subdna| self.dna.insert(0, subdna));
         self.index = Self::create_index(&self.dna);
     }
 
@@ -52,11 +50,14 @@ impl DnaRope {
     }
 
     pub fn append(&mut self, mut suffix: DnaRope) {
-        suffix
-            .dna
-            .drain(..)
-            .into_iter()
-            .for_each(|x| self.append_dna(x));
+        let mut count = self.len();
+        let from = self.dna.len();
+        self.dna.append(&mut suffix.dna);
+        self.index.reserve(self.dna.len() - from);
+        for dna in &self.dna[from..] {
+            count += dna.len();
+            self.index.push(count);
+        }
     }
 
     pub fn get_range(&self, range: Range<usize>) -> Vec<&DNA> {
@@ -130,14 +131,13 @@ impl DnaRope {
     }
 
     fn index_pair(&self, i: usize) -> Option<(usize, usize)> {
-        let index = &self.index;
-        match index.iter().collect::<Vec<&usize>>().binary_search(&&i) {
+        match self.index.binary_search(&&i) {
             Ok(vec) => if vec + 1 < self.dna.len() {
                 Some((vec + 1, 0))
             } else {
                 None
             },
-            Err(vec) => Some((vec, i + self.dna[vec].len() - index[vec])),
+            Err(vec) => Some((vec, i + self.dna[vec].len() - self.index[vec])),
         }
     }
 

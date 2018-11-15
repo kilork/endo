@@ -6,3 +6,5 @@ Cargo.lock
 /.archive
 .idea
 *.iml
+callgrind.*
+*.profile
