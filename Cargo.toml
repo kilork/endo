@@ -1,5 +1,5 @@
 [package]
-name = "endo"
+name = "endo-rs"
 version = "0.1.0"
 authors = ["Alexander Korolev <kilork@yandex.ru>"]
 readme = "README.md"
