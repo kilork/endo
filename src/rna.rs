@@ -17,7 +17,7 @@ pub enum RnaAlpha {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum RNA {
+pub enum Rna {
     AddColor(RnaColor),
     AddAlpha(RnaAlpha),
     EmptyBucket,
@@ -30,19 +30,19 @@ pub enum RNA {
     AddBitmap,
     Compose,
     Clip,
-    Unknown(Vec<DNA>),
+    Unknown(Vec<Dna>),
 }
 
 use super::{HEIGHT, WIDTH};
 
 use super::dna::{
+    Dna::{self, *},
     DnaRopeIter,
-    DNA::{self, *},
 };
 
-use self::{Dir::*, RnaAlpha::*, RnaColor::*, RNA::*};
+use self::{Dir::*, Rna::*, RnaAlpha::*, RnaColor::*};
 
-impl RNA {
+impl Rna {
     pub fn from_dna_iter(iter: &mut DnaRopeIter) -> Self {
         if let (Some(a1), Some(a2), Some(a3), Some(a4), Some(a5), Some(a6), Some(a7)) = (
             iter.next(),
@@ -74,15 +74,7 @@ impl RNA {
                 (P, C, C, P, F, F, P) => AddBitmap,
                 (P, F, F, P, C, C, P) => Compose,
                 (P, F, F, I, C, C, F) => Clip,
-                _ => Unknown(vec![
-                    *a1,
-                    *a2,
-                    *a3,
-                    *a4,
-                    *a5,
-                    *a6,
-                    *a7,
-                ]),
+                _ => Unknown(vec![*a1, *a2, *a3, *a4, *a5, *a6, *a7]),
             }
         } else {
             Unknown(vec![])
@@ -164,13 +156,13 @@ impl RnaRenderer {
         }
     }
 
-    pub fn render(&mut self, rna: &[RNA]) {
+    pub fn render(&mut self, rna: &[Rna]) {
         for command in rna {
             self.render_command(command);
         }
     }
 
-    pub fn render_command(&mut self, command: &RNA) {
+    pub fn render_command(&mut self, command: &Rna) {
         match command {
             AddColor(c) => self.bucket_color.push(BucketColor::from(c)),
             AddAlpha(a) => self.bucker_alpha.push(BucketAlpha::from(a)),

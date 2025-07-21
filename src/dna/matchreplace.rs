@@ -1,8 +1,8 @@
 use super::{
+    Dna::{self, *},
+    DnaRope,
     pattern::Pattern,
     template::Template,
-    DnaRope,
-    DNA::{self, *},
 };
 
 use std::ops::Range;
@@ -110,7 +110,7 @@ fn execute_replace(
     postfix
 }
 
-fn protect(lvl: usize, gene: &[DNA]) -> Vec<DNA> {
+fn protect(lvl: usize, gene: &[Dna]) -> Vec<Dna> {
     if lvl == 0 {
         return gene.to_vec();
     }
@@ -123,7 +123,7 @@ fn protect(lvl: usize, gene: &[DNA]) -> Vec<DNA> {
     d
 }
 
-fn quote(gene: Vec<DNA>) -> Vec<DNA> {
+fn quote(gene: Vec<Dna>) -> Vec<Dna> {
     let mut res = Vec::with_capacity(gene.len());
     for c in gene {
         match c {
@@ -139,7 +139,7 @@ fn quote(gene: Vec<DNA>) -> Vec<DNA> {
     res
 }
 
-fn asnat(n: usize) -> Vec<DNA> {
+fn asnat(n: usize) -> Vec<Dna> {
     let mut res = vec![];
     let mut n = n;
     while n != 0 {

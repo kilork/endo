@@ -6,24 +6,24 @@ mod template;
 use std::fmt;
 
 pub use self::rope::{DnaRope, Iter as DnaRopeIter};
-use crate::rna::RNA;
+use crate::rna::Rna;
 
 #[derive(Copy, Clone, PartialEq, Debug)]
-pub enum DNA {
+pub enum Dna {
     I,
     C,
     F,
     P,
 }
 
-use self::DNA::*;
+use self::Dna::*;
 
 #[derive(Debug)]
 pub enum ParseError {
     UnknownSymbol(char),
 }
 
-impl DNA {
+impl Dna {
     fn try_from(value: char) -> Result<Self, ParseError> {
         match value {
             'I' => Ok(I),
@@ -35,28 +35,28 @@ impl DNA {
     }
 }
 
-impl fmt::Display for DNA {
+impl fmt::Display for Dna {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-pub fn read_dna(dna_str: &str) -> Vec<DNA> {
+pub fn read_dna(dna_str: &str) -> Vec<Dna> {
     dna_str
         .chars()
-        .map(DNA::try_from)
+        .map(Dna::try_from)
         .map(Result::unwrap)
         .collect()
 }
 
 pub struct DnaExecutor {
     dna: Option<DnaRope>,
-    rna: Vec<RNA>,
+    rna: Vec<Rna>,
     loops_count: usize,
 }
 
 impl DnaExecutor {
-    pub fn execute(&mut self) -> &[RNA] {
+    pub fn execute(&mut self) -> &[Rna] {
         while let Some(dna) = self.dna.take() {
             let finished = self.execute_single(dna);
             if finished {
@@ -81,11 +81,11 @@ impl DnaExecutor {
         true
     }
 
-    pub fn rna(&self) -> &[RNA] {
+    pub fn rna(&self) -> &[Rna] {
         &self.rna[..]
     }
 
-    fn add_rna(&mut self, rna: RNA) {
+    fn add_rna(&mut self, rna: Rna) {
         self.rna.push(rna);
     }
 

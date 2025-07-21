@@ -8,4 +8,4 @@ pub const WIDTH: u32 = 600;
 pub const HEIGHT: u32 = 600;
 
 pub use self::dna::DnaExecutor;
-pub use self::rna::{RnaRenderer, RNA};
+pub use self::rna::{Rna, RnaRenderer};

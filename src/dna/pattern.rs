@@ -1,15 +1,15 @@
 use super::{
-    nat, DnaExecutor, DnaRopeIter,
-    DNA::{self, *},
+    Dna::{self, *},
+    DnaExecutor, DnaRopeIter, nat,
 };
-use crate::rna::RNA;
+use crate::rna::Rna;
 use std::fmt;
 
 #[derive(Debug, PartialEq)]
 pub enum Pattern {
-    Base(DNA),
+    Base(Dna),
     Skip(usize),
-    Search(Vec<DNA>),
+    Search(Vec<Dna>),
     GroupOpen,
     GroupClose,
 }
@@ -77,7 +77,7 @@ pub fn execute(executor: &mut DnaExecutor, iter: &mut DnaRopeIter) -> Option<Vec
                         }
                     }
                     Some(I) => {
-                        executor.add_rna(RNA::from_dna_iter(iter));
+                        executor.add_rna(Rna::from_dna_iter(iter));
                     }
                     _ => return None,
                 },
@@ -88,7 +88,7 @@ pub fn execute(executor: &mut DnaExecutor, iter: &mut DnaRopeIter) -> Option<Vec
     }
 }
 
-fn consts(iter: &mut DnaRopeIter) -> Vec<DNA> {
+fn consts(iter: &mut DnaRopeIter) -> Vec<Dna> {
     let mut c = vec![];
     loop {
         match iter.next() {
@@ -135,7 +135,7 @@ mod tests {
         pattern_for_test(dna, |_, iter| nat(iter))
     }
 
-    fn pattern_consts(dna: &str) -> Vec<DNA> {
+    fn pattern_consts(dna: &str) -> Vec<Dna> {
         pattern_for_test(dna, |_, iter| consts(iter))
     }
 

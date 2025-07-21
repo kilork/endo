@@ -12,7 +12,7 @@ use std::fs::File;
 const ENDO_DNA: &str = include_str!("../data/endo.dna");
 
 use endo_rs::DnaExecutor;
-use endo_rs::{RnaRenderer, RNA};
+use endo_rs::{Rna, RnaRenderer};
 
 fn main() {
     let _ = CombinedLogger::init(vec![
@@ -40,14 +40,14 @@ fn main() {
             break;
         }
     }
-    let dummy = [RNA::Unknown(vec![])];
+    let dummy = [Rna::Unknown(vec![])];
 
     let rna = dna_executor.rna();
 
     info!("rna len: {}", rna.len());
 
     let mut renderer = RnaRenderer::new();
-    let mut last_command = &RNA::Unknown(vec![]);
+    let mut last_command = &Rna::Unknown(vec![]);
     let mut same_command_count = 0;
 
     for (index, command) in rna.iter().chain(dummy.iter()).enumerate() {
@@ -55,7 +55,7 @@ fn main() {
             same_command_count += 1;
         } else {
             match last_command {
-                RNA::Unknown(_) => (),
+                Rna::Unknown(_) => (),
                 _ => println!(
                     "{} {:?}{} {}",
                     index,
@@ -66,11 +66,11 @@ fn main() {
                         format!(" x {}", same_command_count)
                     },
                     match last_command {
-                        RNA::TryFill => {
+                        Rna::TryFill => {
                             format!("{:?} {:?}", renderer.position(), renderer.current_pixel())
                         }
-                        RNA::Move => format!("{:?}", renderer.position()),
-                        RNA::Line => format!(
+                        Rna::Move => format!("{:?}", renderer.position()),
+                        Rna::Line => format!(
                             "{:?} {:?} {:?}",
                             renderer.mark(),
                             renderer.position(),
