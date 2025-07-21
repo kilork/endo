@@ -172,7 +172,7 @@ fn nat(dna_iter: &mut DnaRopeIter) -> Option<usize> {
                 if bit_index < 64 {
                     n |= 1 << bit_index;
                 } else {
-                    n = std::usize::MAX;
+                    n = usize::MAX;
                 }
             }
             _ => return None,

@@ -122,7 +122,7 @@ impl DnaRope {
 
         if let Some((vec, at)) = self.index_pair(at) {
             let mut postfix = self.dna.split_off(vec);
-            self.index.split_off(vec);
+            self.index.truncate(vec);
 
             if at > 0 {
                 let vec_postfix = postfix[0].split_off(at);
@@ -171,8 +171,7 @@ impl DnaRope {
             x => x,
         });
 
-        let mut result: Vec<(usize, Option<Vec<Dna>>, &Range<usize>)> =
-            Vec::with_capacity(ranges.len());
+        let mut result: Vec<(_, Option<Vec<_>>, &Range<_>)> = Vec::with_capacity(ranges.len());
         for range in ranges {
             let have_intersection = result
                 .iter()
@@ -241,7 +240,7 @@ pub struct Iter<'a> {
     pub absolute_index: usize,
 }
 
-impl<'a, 'b: 'a> Iter<'a> {
+impl<'a> Iter<'a> {
     pub fn dna_search(&self, key: &[Dna]) -> Option<usize> {
         if key.is_empty() {
             return None;
@@ -523,6 +522,7 @@ mod tests {
 
     #[test]
     fn split_by_ranges() {
+        #[allow(clippy::single_range_in_vec_init)]
         case_split_by_ranges(&[0..10 + 20 + 30]);
         case_split_by_ranges(&[0..10, 0..10 + 20 + 30]);
         case_split_by_ranges(&[0..10, 10..10 + 20, 10 + 20..10 + 20 + 30]);
