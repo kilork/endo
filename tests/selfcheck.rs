@@ -1,8 +1,8 @@
-extern crate endo;
+extern crate endo_rs;
 
 const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
 
-use endo::DnaExecutor;
+use endo_rs::DnaExecutor;
 
 #[test]
 fn selfcheck_compare_to_sampled() {

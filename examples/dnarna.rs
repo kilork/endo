@@ -1,7 +1,7 @@
 extern crate log;
 extern crate simplelog;
 
-extern crate endo;
+extern crate endo_rs;
 
 use log::info;
 use simplelog::{CombinedLogger, Config, LevelFilter, TermLogger, WriteLogger};
@@ -11,8 +11,8 @@ use std::fs::File;
 
 const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
 
-use endo::DnaExecutor;
-use endo::{RnaRenderer, RNA};
+use endo_rs::DnaExecutor;
+use endo_rs::{RnaRenderer, RNA};
 
 fn main() {
     let _ = CombinedLogger::init(vec![

@@ -1,9 +1,9 @@
 #[macro_use]
 extern crate criterion;
-extern crate endo;
+extern crate endo_rs;
 
 use criterion::Criterion;
-use endo::DnaExecutor;
+use endo_rs::DnaExecutor;
 
 const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
 

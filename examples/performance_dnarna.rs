@@ -1,12 +1,12 @@
 #[cfg(feature = "with_cpuprofiler")]
 extern crate cpuprofiler;
-extern crate endo;
+extern crate endo_rs;
 
 const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
 
 #[cfg(feature = "with_cpuprofiler")]
 use cpuprofiler::PROFILER;
-use endo::DnaExecutor;
+use endo_rs::DnaExecutor;
 
 fn main() {
     let mut dna_executor = DnaExecutor::from(ENDO_DNA);

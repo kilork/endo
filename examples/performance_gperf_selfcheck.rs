@@ -1,10 +1,10 @@
 extern crate cpuprofiler;
-extern crate endo;
+extern crate endo_rs;
 
 const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
 
 use cpuprofiler::PROFILER;
-use endo::DnaExecutor;
+use endo_rs::DnaExecutor;
 
 fn main() {
     let dna = "IIPIFFCPICICIICPIICIPPPICIIC".to_string() + ENDO_DNA;
