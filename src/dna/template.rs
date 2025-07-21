@@ -2,7 +2,7 @@ use super::{
     nat, DnaExecutor, DnaRopeIter,
     DNA::{self, *},
 };
-use rna::RNA;
+use crate::rna::RNA;
 use std::fmt;
 
 #[derive(Debug, PartialEq)]

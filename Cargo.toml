@@ -8,6 +8,7 @@ description = """
 A Rust library implementing DNA to RNA encoding from
 ICFP 2007 Programming Contest.
 """
+edition = "2018"
 
 [dependencies]
 log = "0.4"

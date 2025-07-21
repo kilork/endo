@@ -6,7 +6,7 @@ mod template;
 use std::fmt;
 
 pub use self::rope::{DnaRope, Iter as DnaRopeIter};
-use rna::RNA;
+use crate::rna::RNA;
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum DNA {
