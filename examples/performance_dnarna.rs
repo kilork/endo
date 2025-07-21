@@ -2,7 +2,7 @@
 extern crate cpuprofiler;
 extern crate endo_rs;
 
-const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
+const ENDO_DNA: &str = include_str!("../data/endo.dna");
 
 #[cfg(feature = "with_cpuprofiler")]
 use cpuprofiler::PROFILER;

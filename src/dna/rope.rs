@@ -11,7 +11,13 @@ pub struct DnaRope {
 
 impl From<Vec<DNA>> for DnaRope {
     fn from(value: Vec<DNA>) -> Self {
-        Self::from_raw(vec![value].into())
+        Self::from_raw(vec![value])
+    }
+}
+
+impl Default for DnaRope {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -83,7 +89,7 @@ impl DnaRope {
 
     pub fn iter(&self) -> Iter {
         Iter {
-            rope: &self,
+            rope: self,
             index: 0,
             vec: 0,
             absolute_index: 0,
@@ -105,8 +111,8 @@ impl DnaRope {
     pub fn split_off(&mut self, at: usize) -> Self {
         if at == 0 {
             return Self {
-                dna: std::mem::replace(&mut self.dna, vec![]),
-                index: std::mem::replace(&mut self.index, vec![])
+                dna: std::mem::take(&mut self.dna),
+                index: std::mem::take(&mut self.index)
             };
         }
 
@@ -131,7 +137,7 @@ impl DnaRope {
     }
 
     fn index_pair(&self, i: usize) -> Option<(usize, usize)> {
-        match self.index.binary_search(&&i) {
+        match self.index.binary_search(&i) {
             Ok(vec) => if vec + 1 < self.dna.len() {
                 Some((vec + 1, 0))
             } else {
@@ -209,7 +215,7 @@ impl DnaRope {
     fn iter_from_range(&self, range: Range<usize>) -> std::iter::Take<Iter> {
         if let Some((vec, index)) = self.index_pair(range.start) {
             Iter {
-                rope: &self,
+                rope: self,
                 vec,
                 index,
                 absolute_index: range.start,
@@ -243,11 +249,11 @@ impl<'a, 'b: 'a> Iter<'a> {
         }
 
         let mut dfa = vec![[0; 4]; key_len];
-        dfa[0][key[0].clone() as usize] = 1;
+        dfa[0][key[0] as usize] = 1;
         let mut x = 0;
         for j in 1..key_len {
             dfa[j] = dfa[x];
-            let k = key[j].clone() as usize;
+            let k = key[j] as usize;
             dfa[j][k] = j + 1;
             x = dfa[x][k];
         }
@@ -255,7 +261,7 @@ impl<'a, 'b: 'a> Iter<'a> {
         let mut iter = self.clone();
         let mut j = 0;
         while let Some(dna) = iter.next() {
-            j = dfa[j][dna.clone() as usize];
+            j = dfa[j][*dna as usize];
             if j == key_len {
                 return Some(iter.pos() - key_len);
             }
@@ -351,7 +357,7 @@ mod tests {
                 vec![P, P],
                 vec![],
                 vec![P, P],
-            ].into(),
+            ],
         )
     }
 
@@ -418,7 +424,7 @@ mod tests {
         let dna_rope = DnaRope::from(vec![I]);
         assert_eq!(dna_rope.index_pair(1), None);
 
-        let dna_rope = DnaRope::from_raw(vec![vec![], vec![], vec![], vec![F]].into());
+        let dna_rope = DnaRope::from_raw(vec![vec![], vec![], vec![], vec![F]]);
         assert_eq!(dna_rope.dna[dna_rope.index_pair(0).unwrap().0][0], F);
 
         let dna_rope = sample_dna();
@@ -436,7 +442,7 @@ mod tests {
                 vec![],
                 vec![P, P, I, I, C, C, F, F],
                 vec![],
-            ].into(),
+            ],
         ));
     }
 
@@ -447,13 +453,13 @@ mod tests {
     fn sample_three_group_flat(a: usize, b: usize, c: usize) -> Vec<DNA> {
         vec![I; a]
             .into_iter()
-            .chain(vec![C; b].into_iter())
-            .chain(vec![P; c].into_iter())
+            .chain(vec![C; b])
+            .chain(vec![P; c])
             .collect()
     }
 
     fn sample_three_group_dna(a: usize, b: usize, c: usize) -> DnaRope {
-        DnaRope::from_raw(sample_three_group(a, b, c).into())
+        DnaRope::from_raw(sample_three_group(a, b, c))
     }
 
     #[test]

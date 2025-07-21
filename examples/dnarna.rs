@@ -9,7 +9,7 @@ use simplelog::{CombinedLogger, Config, LevelFilter, TermLogger, WriteLogger};
 use std::env::args;
 use std::fs::File;
 
-const ENDO_DNA: &'static str = include_str!("../data/endo.dna");
+const ENDO_DNA: &str = include_str!("../data/endo.dna");
 
 use endo_rs::DnaExecutor;
 use endo_rs::{RnaRenderer, RNA};
@@ -76,7 +76,7 @@ fn main() {
                             renderer.position(),
                             renderer.current_pixel()
                         ),
-                        _ => format!(""),
+                        _ => String::new(),
                     }
                 ),
             }

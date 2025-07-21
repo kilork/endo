@@ -148,7 +148,7 @@ fn debug<T: ToString>(t: &[T]) -> String {
     t.iter().map(T::to_string).collect::<Vec<_>>().join("")
 }
 
-impl<'a> From<&'a str> for DnaExecutor {
+impl From<&str> for DnaExecutor {
     fn from(value: &str) -> Self {
         let dna = Some(DnaRope::from(read_dna(value)));
         DnaExecutor {

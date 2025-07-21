@@ -75,13 +75,13 @@ impl RNA {
                 (P, F, F, P, C, C, P) => Compose,
                 (P, F, F, I, C, C, F) => Clip,
                 _ => Unknown(vec![
-                    a1.clone(),
-                    a2.clone(),
-                    a3.clone(),
-                    a4.clone(),
-                    a5.clone(),
-                    a6.clone(),
-                    a7.clone(),
+                    *a1,
+                    *a2,
+                    *a3,
+                    *a4,
+                    *a5,
+                    *a6,
+                    *a7,
                 ]),
             }
         } else {
@@ -92,7 +92,7 @@ impl RNA {
 
 struct BucketColor(u8, u8, u8);
 
-impl<'a> From<&'a RnaColor> for BucketColor {
+impl From<&RnaColor> for BucketColor {
     fn from(value: &RnaColor) -> Self {
         match value {
             Black => BucketColor(0, 0, 0),
@@ -109,7 +109,7 @@ impl<'a> From<&'a RnaColor> for BucketColor {
 
 type BucketAlpha = u8;
 
-impl<'a> From<&'a RnaAlpha> for BucketAlpha {
+impl From<&RnaAlpha> for BucketAlpha {
     fn from(value: &RnaAlpha) -> Self {
         match value {
             Transparent => 0,
@@ -144,6 +144,12 @@ const BITMAP_SIZE: usize = WIDTH as usize * HEIGHT as usize;
 
 fn new_bitmap() -> Vec<Pixel> {
     vec![(0, 0, 0, 0); BITMAP_SIZE]
+}
+
+impl Default for RnaRenderer {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl RnaRenderer {
@@ -257,7 +263,7 @@ impl RnaRenderer {
         let new = self.current_pixel();
         let old = self.pixel_get(self.position);
         if old != new {
-            let position = self.position.clone();
+            let position = self.position;
             self.fill(position, old, new);
         }
     }

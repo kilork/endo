@@ -82,14 +82,14 @@ fn execute_replace(
     let mut r = vec![];
     for t in template {
         match t {
-            Template::Base(gene) => r.push(gene.clone()),
+            Template::Base(gene) => r.push(*gene),
             Template::NumberLevel(n, l) => {
                 if let Some(e_original) = e.get(*n) {
                     if e_original.start != e_original.end {
                         let env_n = env.next().unwrap();
                         if *l == 0 {
                             if !r.is_empty() {
-                                prefix.append_dna(r.drain(..).collect());
+                                prefix.append_dna(std::mem::take(&mut r));
                             }
                             prefix.append(env_n);
                         } else {
