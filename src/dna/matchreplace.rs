@@ -69,12 +69,11 @@ fn execute_replace(
     let mut prefix = DnaRope::new();
     let mut env = vec![];
     for t in template {
-        if let Template::NumberLevel(n, _) = t {
-            if let Some(env_n) = e.get(*n) {
-                if env_n.start != env_n.end {
-                    env.push(env_n.clone());
-                }
-            }
+        if let Template::NumberLevel(n, _) = t
+            && let Some(env_n) = e.get(*n)
+            && env_n.start != env_n.end
+        {
+            env.push(env_n.clone());
         }
     }
     let splitted_env = dna.split_by_ranges(&env);
@@ -84,17 +83,17 @@ fn execute_replace(
         match t {
             Template::Base(gene) => r.push(*gene),
             Template::NumberLevel(n, l) => {
-                if let Some(e_original) = e.get(*n) {
-                    if e_original.start != e_original.end {
-                        let env_n = env.next().unwrap();
-                        if *l == 0 {
-                            if !r.is_empty() {
-                                prefix.append_dna(std::mem::take(&mut r));
-                            }
-                            prefix.append(env_n);
-                        } else {
-                            r.extend(protect(*l, &env_n.iter().cloned().collect::<Vec<_>>()[..]));
+                if let Some(e_original) = e.get(*n)
+                    && e_original.start != e_original.end
+                {
+                    let env_n = env.next().unwrap();
+                    if *l == 0 {
+                        if !r.is_empty() {
+                            prefix.append_dna(std::mem::take(&mut r));
                         }
+                        prefix.append(env_n);
+                    } else {
+                        r.extend(protect(*l, &env_n.iter().cloned().collect::<Vec<_>>()[..]));
                     }
                 }
             }

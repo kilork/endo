@@ -91,7 +91,7 @@ impl DnaRope {
         DnaRope::from(dna)
     }
 
-    pub fn iter(&self) -> Iter {
+    pub fn iter(&self) -> Iter<'_> {
         Iter {
             rope: self,
             index: 0,
@@ -100,7 +100,7 @@ impl DnaRope {
         }
     }
 
-    pub fn iter_seek(&self, iter: &mut Iter, n: usize) {
+    pub fn iter_seek(&self, iter: &mut Iter<'_>, n: usize) {
         if let Some((vec, index)) = self.index_pair(n) {
             iter.vec = vec;
             iter.index = index;
@@ -217,7 +217,7 @@ impl DnaRope {
         self.iter_from_range(range).cloned().collect()
     }
 
-    fn iter_from_range(&self, range: Range<usize>) -> std::iter::Take<Iter> {
+    fn iter_from_range(&self, range: Range<usize>) -> std::iter::Take<Iter<'_>> {
         if let Some((vec, index)) = self.index_pair(range.start) {
             Iter {
                 rope: self,

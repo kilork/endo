@@ -268,21 +268,21 @@ impl RnaRenderer {
     }
 
     fn fill_vec(&mut self, p_vec: &mut Vec<Position>, initial: Pixel, new: Pixel) {
-        if let Some(p) = p_vec.pop() {
-            if self.pixel_get(p) == initial {
-                self.pixel_set(p, new);
-                if p.0 > 0 {
-                    p_vec.push((p.0 - 1, p.1));
-                }
-                if p.0 < WIDTH - 1 {
-                    p_vec.push((p.0 + 1, p.1));
-                }
-                if p.1 > 0 {
-                    p_vec.push((p.0, p.1 - 1));
-                }
-                if p.1 < HEIGHT - 1 {
-                    p_vec.push((p.0, p.1 + 1));
-                }
+        if let Some(p) = p_vec.pop()
+            && self.pixel_get(p) == initial
+        {
+            self.pixel_set(p, new);
+            if p.0 > 0 {
+                p_vec.push((p.0 - 1, p.1));
+            }
+            if p.0 < WIDTH - 1 {
+                p_vec.push((p.0 + 1, p.1));
+            }
+            if p.1 > 0 {
+                p_vec.push((p.0, p.1 - 1));
+            }
+            if p.1 < HEIGHT - 1 {
+                p_vec.push((p.0, p.1 + 1));
             }
         }
     }
